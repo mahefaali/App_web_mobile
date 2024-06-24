@@ -11,10 +11,12 @@ const ProfileScreen = ({ navigation }) => {
       const token = await AsyncStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get('http://localhost:5000/api/profile', {
-            headers: { Authorization: `Bearer ${token}` },
+          const response = await axios.get('http://192.168.43.120:5000/api/profile', {
+            headers: {
+               Authorization: `Bearer ${token}`, 
+              },
           });
-          setUser(response.data.user);
+          setUser(response.data);
         } catch (error) {
           console.error(error);
         }

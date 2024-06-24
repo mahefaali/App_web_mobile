@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => null, // Supprime la flèche de retour en arrière
+      gestureEnabled: false,  // Désactive le geste de retour sur iOS
+    });
+  }, [navigation]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -33,7 +40,10 @@ const ProfileScreen = ({ navigation }) => {
       {user ? (
         <>
           <Text>Username: {user.username}</Text>
-          <Text>ID: {user.id}</Text>
+          <Text>ID: {user._id}</Text>
+          <Text>First name: {user.firstName}</Text>
+          <Text>Last name: {user.lastName}</Text>
+          <Button title="Change Password" onPress={() => navigation.navigate('ChangePassword')} />
           <Button title="Logout" onPress={() => {
             AsyncStorage.removeItem('token');
             navigation.navigate('Login');

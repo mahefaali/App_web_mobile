@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
@@ -8,6 +8,13 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => null, // Supprime la flèche de retour en arrière
+      gestureEnabled: false,  // Désactive le geste de retour sur iOS
+    });
+  }, [navigation]);
+
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://192.168.43.120:5000/api/login', { username, password });
@@ -15,10 +22,10 @@ const LoginScreen = ({ navigation }) => {
       await AsyncStorage.setItem('token', token);
       navigation.navigate('Profile');
     } catch (error) {
-      console.error(error)
+      //console.error(error)
       showMessage({
         message: 'Error',
-        description: 'Login Failed'+ error.response?.data?.message || 'An error occurred',
+        description: 'Login Failed'+ error || 'An error occurred',
         type: 'danger',
       });
     }
@@ -41,6 +48,8 @@ const LoginScreen = ({ navigation }) => {
         secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
+      <Text>Or</Text>
+      <Button title="Register" onPress={() => navigation.navigate('Register')} />
     </View>
   );
 };
